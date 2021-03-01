@@ -31,4 +31,3 @@ jobs:
         SLACK_USERNAME: Deploy Bot
         SLACK_AVATAR: sender
       uses: Ilshidur/action-slack@2.0.2
-        SLACK_COLOR: danger
