@@ -52,4 +52,22 @@ jobs:
       env:
         INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       with:
-        text: "${{github.event.head_commit.message}} -> ステージング環境に自動デプロイしました"
+        text: "✅ staging環境への自動デプロイが完了しました"
+        attachments: |
+          [
+            {
+              "color": "success",
+              "author_name": "${{ github.actor }}",
+              "author_icon": "${{ github.event.sender.avatar_url }}",
+              "fields": [
+                {
+                  "title": "Commit Message",
+                  "value": "${{ github.event.head_commit.message }}"
+                },
+                {
+                  "title": "Compare URL",
+                  "value": "${{ github.event.compare }}"
+                }
+              ]
+            }
+          ]
