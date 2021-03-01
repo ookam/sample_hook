@@ -2,9 +2,6 @@ name: go-test
 
 on: push
 
-env:
-  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,13 +24,11 @@ jobs:
         SLACK_COLOR: good
 
     # テスト失敗時はこちらのステップが実行される
-    - name: GitHub Action for Slack
+    - name: slackに通知する
       if: failure()
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: sample_slack_push # Optional. (defaults to webhook app)
+        SLACK_USERNAME: Deploy Bot
         SLACK_AVATAR: sender
       uses: Ilshidur/action-slack@2.0.2
-      with:
-        args: 'A new commit has been pushed.' # Optional
         SLACK_COLOR: danger
