@@ -14,18 +14,40 @@ jobs:
     - run: go test -v ./...
       id: test
 
-    # テスト成功時はこちらのステップが実行される
-    - name: Slack Notification on Success
-      if: success()
-      uses: rtCamp/action-slack-notify@v2.0.2
-      env:
-        SLACK_CHANNEL: ci
-        SLACK_TITLE: Test Success
-        SLACK_COLOR: good
-
     # テスト失敗時はこちらのステップが実行される
-    - name: slackに通知する
+    - name: Slack Notification on Success
       if: failure()
+      uses: tokorom/action-slack-incoming-webhook@main
+      env:
+        INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      with:
+        text: Successfully automated deployment.
+        attachments: |
+          [
+            {
+              "color": "good",
+              "author_name": "${{ github.actor }}",
+              "author_icon": "${{ github.event.sender.avatar_url }}",
+              "fields": [
+                {
+                  "title": "Commit Message",
+                  "value": "${{ env.COMMIT_MESSAGE }}"
+                },
+                {
+                  "title": "GitHub Actions URL",
+                  "value": "${{ github.event.repository.url }}/actions/runs/${{ github.run_id }}"
+                },
+                {
+                  "title": "Compare URL",
+                  "value": "${{ github.event.compare }}"
+                }
+              ]
+            }
+          ]
+
+    # テスト成功時はこちらのステップが実行される
+    - name: slackに通知する
+      if: success()
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: Deploy Bot
