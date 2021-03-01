@@ -15,8 +15,8 @@ jobs:
       id: test
 
     # テスト失敗時はこちらのステップが実行される
-    - name: Slack Notification on Success
-      if: failure()
+    - name: Slackに失敗を通知する
+      if: success()
       uses: tokorom/action-slack-incoming-webhook@main
       env:
         INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
@@ -46,12 +46,10 @@ jobs:
           ]
 
     # テスト成功時はこちらのステップが実行される
-    - name: slackに通知する
-      if: success()
+    - name: slackに成功を通知する
+      if: failure()
+      uses: tokorom/action-slack-incoming-webhook@main
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: Deploy Bot
-        SLACK_AVATAR: sender
-      uses: Ilshidur/action-slack@2.0.2
+        INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       with:
-        args: "${{github.event.head_commit.message}} -> deploy success"
+        text: "${{github.event.head_commit.message}} -> ステージング環境に自動デプロイしました"
