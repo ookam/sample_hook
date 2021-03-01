@@ -21,17 +21,17 @@ jobs:
       env:
         INCOMING_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
       with:
-        text: Successfully automated deployment.
+        text: "🚨 staging環境への自動デプロイに失敗しました 🚨"
         attachments: |
           [
             {
-              "color": "good",
+              "color": "warning",
               "author_name": "${{ github.actor }}",
               "author_icon": "${{ github.event.sender.avatar_url }}",
               "fields": [
                 {
                   "title": "Commit Message",
-                  "value": "${{ env.COMMIT_MESSAGE }}"
+                  "value": "${{ github.event.head_commit.message }}"
                 },
                 {
                   "title": "GitHub Actions URL",
